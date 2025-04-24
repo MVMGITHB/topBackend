@@ -36,7 +36,9 @@ const allowedOrigins = new Set([
   "https://top5shots-2kuz.vercel.app/",
   "https://top5shots-2kuz.vercel.app",
   "http://82.25.109.68:3000/",
-  "http://82.25.109.68:3000"
+  "http://82.25.109.68:3000",
+  "http://top5shots.com",
+  "http://top5shots.com/"
 ]);
 
 // CORS middleware setup
