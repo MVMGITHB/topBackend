@@ -40,7 +40,9 @@ const allowedOrigins = new Set([
   "http://top5shots.com",
   "http://top5shots.com/",
   "https://top5shots.com/",
-  "https://top5shots.com"
+  "https://top5shots.com",
+  "https://www.top5shots.com/",
+  "https://www.top5shots.com"
 ]);
 
 // CORS middleware setup
