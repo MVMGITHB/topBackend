@@ -38,7 +38,9 @@ const allowedOrigins = new Set([
   "http://82.25.109.68:3000/",
   "http://82.25.109.68:3000",
   "http://top5shots.com",
-  "http://top5shots.com/"
+  "http://top5shots.com/",
+  "https://top5shots.com/",
+  "https://top5shots.com"
 ]);
 
 // CORS middleware setup
