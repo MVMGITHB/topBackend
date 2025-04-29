@@ -89,6 +89,7 @@ exports.getAllCompBlogs = async (req, res) => {
     res.json(blogs);
   } catch (err) {
     res.status(500).json({ error: err.message });
+    console.log(error)
   }
 };
 
