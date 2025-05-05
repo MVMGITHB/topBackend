@@ -6,7 +6,7 @@ exports.createCompany = async (req, res) => {
   try {
 
      
-    const company = await Company.create({...req.body,slug: slugify(req.body.websiteName).toLowerCase()});
+    const company = await Company.create({...req.body,slug: slugify(req.body.slug).toLowerCase()});
     res.status(201).json(company);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -72,7 +72,7 @@ exports.getCompanyBySubcategoryId = async (req, res) => {
 exports.updateCompany = async (req, res) => {
   try {
 
-    const company = await Company.findByIdAndUpdate(req.params.id, {...req.body,slug: slugify(req.body.websiteName).toLowerCase()}, {
+    const company = await Company.findByIdAndUpdate(req.params.id, {...req.body,slug: slugify(req.body.slug).toLowerCase()}, {
       new: true,
     });
 
