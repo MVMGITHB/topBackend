@@ -9,7 +9,7 @@ exports.createBlog = async (req, res) => {
 
     const blog = new Blog({
       ...req.body,
-      slug: slugify(title).toLowerCase(),
+      slug: slugify(req.body.slug).toLowerCase(),
     });
 
     await blog.save();

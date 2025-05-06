@@ -60,7 +60,22 @@ const blogSchema = new mongoose.Schema(
     status:{
       type:String,
       default:"Inactive"
-    }
+    },
+
+
+    faqs: [
+      {
+        ques: {
+          type: String,
+          required: true
+        },
+        ans: {
+          type: String,
+          required: true
+        }
+      }
+    ],
+
   },
   { timestamps: true } // Automatically adds createdAt and updatedAt fields
 );
