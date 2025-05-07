@@ -5,8 +5,10 @@ const authController = require("../controllers/auth.controller");
 
 router.post("/register", authController.registerUser);
 router.put("/update/:userId", authController.updateUserRole);
+router.patch("/updateUser/:id", authController.updateUser);
 router.patch("/updateUserStatus/:id", authController.updateStatus);
 router.get("/singleUser/:id", authController.getSingleUser);
+router.get("/singleUserbyslug/:slug", authController.getUserByslug);
 router.post("/login", authController.loginUser);
 router.get("/getUsers", authController.getAllUser);
 router.get("/getAdmin", authController.getAllAdmin);

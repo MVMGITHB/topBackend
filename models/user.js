@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const { ObjectId } = mongoose.Schema;
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -40,6 +40,29 @@ const userSchema = new mongoose.Schema(
       required: true,
       select: false, // hides it from queries unless explicitly selected
     },
+
+    shortBio:{
+       type:String,
+    },
+
+    tag:{
+      type:String,
+    },
+
+    slug: {
+      type: String,
+      unique: true,
+      index: true,
+    },
+
+    socialMedia: {
+      facebook: { type: String },
+      linkedin: { type: String },
+      twitter: { type: String },
+      profile: { type: String }
+  },
+
+   blog: [{ type: ObjectId, ref: "Blog", required: true }],
 
     status:{
       type:String,

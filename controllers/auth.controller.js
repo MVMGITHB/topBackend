@@ -6,7 +6,7 @@ const User = require("../models/user");
 // Register a new user
 const registerUser = async (req, res) => {
   try {
-    const { email, firstName, lastName, username, password, profilePicture,role } = req.body;
+    const { email, firstName, lastName, username, password, profilePicture,role,shortBio,tag,socialMedia,blog,slug } = req.body;
 
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
@@ -22,7 +22,12 @@ const registerUser = async (req, res) => {
       username,
       profilePicture,
       password: hashedPassword,
-      role
+      role,
+      shortBio,
+      tag,
+      socialMedia,
+      blog,
+      slug: slugify(req.body.slug).toLowerCase(),
     });
 
     await newUser.save();
@@ -145,6 +150,70 @@ const getAllAdmin = async (req, res) => {
 };
 
 
+const updateUser = async (req, res) => {
+  try {
+    let user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    const {
+      email,
+      firstName,
+      lastName,
+      username,
+      profilePicture,
+      role,
+      shortBio,
+      tag,
+      socialMedia,
+      blog, // This should be a new blog ID or an array of new blog IDs
+    } = req.body;
+
+    if (email) user.email = email;
+    if (firstName) user.firstName = firstName;
+    if (lastName) user.lastName = lastName;
+    if (username) user.username = username;
+    if (profilePicture) user.profilePicture = profilePicture;
+    if (role) user.role = role;
+    if (shortBio) user.shortBio = shortBio;
+    if (tag) user.tag = tag;
+    if (socialMedia) user.socialMedia = socialMedia;
+    if(slug) user.slug = slugify(req.body.slug).toLowerCase()
+
+    // Append new blog ID(s) instead of replacing
+    if (blog) {
+      if (Array.isArray(blog)) {
+        user.blog.push(...blog); // Add multiple blog IDs
+      } else {
+        user.blog.push(blog); // Add a single blog ID
+      }
+    }
+
+    await user.save();
+    res.status(200).json({ message: "User updated successfully", user });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const getUserByslug= async(req,res)=>{
+      try {
+          
+        const user = await User.find({slug:req.params.slug})
+        if(!user){
+          res.status(400).json({message:"User not found"})
+        }
+        res.status(200).json(user)
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+      }
+}
+
+
 
 const updateUserRole = async (req, res) => {
   const { userId } = req.params;
@@ -177,4 +246,4 @@ const updateUserRole = async (req, res) => {
 
 
 
-module.exports = { registerUser, loginUser,getAllUser,getAllAdmin ,updateUserRole,updateStatus,getSingleUser};
+module.exports = { registerUser, loginUser,getAllUser,getAllAdmin ,updateUserRole,updateStatus,getSingleUser,updateUser,getUserByslug};
