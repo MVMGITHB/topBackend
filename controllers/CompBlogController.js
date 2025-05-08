@@ -6,7 +6,7 @@ const slugify = require("slugify");
 // CREATE
 exports.createCompBlog = async (req, res) => {
   try {
-    const { title, mtitle, mdesc, categories, subcategories, company, tags, postedBy } = req.body;
+    const { title, mtitle, mdesc, categories, subcategories, company, tags, postedBy,image } = req.body;
 
     const compBlog = await CompBlog.create({
       title,
@@ -18,6 +18,7 @@ exports.createCompBlog = async (req, res) => {
       company,
       tags,
       postedBy,
+      image
     });
 
     res.status(201).json(compBlog);

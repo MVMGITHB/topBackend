@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    profilePicture: {
+    image: {
       type: String,
     },
     isAdmin: {

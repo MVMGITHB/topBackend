@@ -29,8 +29,6 @@ exports.getAllBlogs = async (req, res) => {
       .populate("subcategories", "name")
       .populate("postedBy", "username email") // Only get username and email
       .sort({ createdAt: -1 });
-
-    console.log("Get Blogs");
     res.json(blogs);
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -49,6 +49,10 @@ const CompBlogSchema = new mongoose.Schema(
       ref: "User",
     },
 
+    image: {
+      type:String,
+     },
+
     status:{
       type:String,
       default:"Inactive"

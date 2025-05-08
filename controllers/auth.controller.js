@@ -2,11 +2,12 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const slugify = require("slugify");
 
 // Register a new user
 const registerUser = async (req, res) => {
   try {
-    const { email, firstName, lastName, username, password, profilePicture,role,shortBio,tag,socialMedia,blog,slug } = req.body;
+    const { email, firstName, lastName, username, password, image,role,shortBio,tag,socialMedia,blog,slug } = req.body;
 
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
@@ -20,7 +21,7 @@ const registerUser = async (req, res) => {
       firstName,
       lastName,
       username,
-      profilePicture,
+      image,
       password: hashedPassword,
       role,
       shortBio,
@@ -64,7 +65,7 @@ const loginUser = async (req, res) => {
         username: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
-        profilePicture: user.profilePicture,
+      image: user.image,
         isAdmin: user.isAdmin,
         role:user.role
       },
@@ -162,11 +163,12 @@ const updateUser = async (req, res) => {
       firstName,
       lastName,
       username,
-      profilePicture,
+       image,
       role,
       shortBio,
       tag,
       socialMedia,
+      slug,
       blog, // This should be a new blog ID or an array of new blog IDs
     } = req.body;
 
@@ -174,12 +176,12 @@ const updateUser = async (req, res) => {
     if (firstName) user.firstName = firstName;
     if (lastName) user.lastName = lastName;
     if (username) user.username = username;
-    if (profilePicture) user.profilePicture = profilePicture;
+    if (image) user.image = image;
     if (role) user.role = role;
     if (shortBio) user.shortBio = shortBio;
     if (tag) user.tag = tag;
     if (socialMedia) user.socialMedia = socialMedia;
-    if(slug) user.slug = slugify(req.body.slug).toLowerCase()
+    if(slug) user.slug = slugify(slug).toLowerCase()
 
     // Append new blog ID(s) instead of replacing
     if (blog) {
@@ -199,10 +201,47 @@ const updateUser = async (req, res) => {
   }
 };
 
+
+
+const deleteUserBlog = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { blogsToDelete } = req.body;
+
+    if (!Array.isArray(blogsToDelete) || blogsToDelete.length === 0) {
+      return res.status(400).json({ message: "No blogs provided to delete" });
+    }
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Filter out blog IDs to delete
+    user.blog = user.blog.filter(
+      (blogId) => !blogsToDelete.includes(blogId.toString())
+    );
+
+    await user.save();
+    res.status(200).json({ message: "Blog(s) deleted from user", blog: user.blog });
+
+  } catch (error) {
+    console.error("Error deleting blog:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
 const getUserByslug= async(req,res)=>{
       try {
           
-        const user = await User.find({slug:req.params.slug})
+        const user = await User.find({slug:req.params.slug}).populate({
+          path: 'blog',
+          populate: [
+            { path: 'categories', model: 'Category' },
+            { path: 'subcategories', model: 'Subcategory' }
+          ]
+        });
         if(!user){
           res.status(400).json({message:"User not found"})
         }
@@ -246,4 +285,7 @@ const updateUserRole = async (req, res) => {
 
 
 
-module.exports = { registerUser, loginUser,getAllUser,getAllAdmin ,updateUserRole,updateStatus,getSingleUser,updateUser,getUserByslug};
+
+
+
+module.exports = { registerUser, loginUser,getAllUser,getAllAdmin ,updateUserRole,updateStatus,getSingleUser,updateUser,getUserByslug,deleteUserBlog};
