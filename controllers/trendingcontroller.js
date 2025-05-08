@@ -26,7 +26,7 @@ exports.getTrendingShorts = async (req, res) => {
         path: "compBlog",
         populate: [
           { path: "categories", model: "Category" },
-          // { path: "subcategories", model: "Subcategory" },
+          { path: "subcategories", model: "Subcategory" },
           { path: "company", model: "Company", select: "logo" },
           // { path: "tags", model: "Tag" },
           // { path: "postedBy", model: "User" },

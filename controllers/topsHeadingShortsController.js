@@ -18,7 +18,17 @@ exports.addTopsHeadingShort = async (req, res) => {
 // READ ALL
 exports.getTopsHeadingShorts = async (req, res) => {
   try {
-    const data = await TopsHeadingShorts.find().populate("compBlog");
+    const data = await TopsHeadingShorts.find() .populate({
+        path: "compBlog",
+        populate: [
+          { path: "categories", model: "Category" },
+          { path: "subcategories", model: "Subcategory" }, // ✅ Add this line
+          { path: "company", model: "Company", select: "logo" },
+          // { path: "tags", model: "Tag" },
+          // { path: "postedBy", model: "User" },
+        ],
+      })
+      .sort({ createdAt: -1 });;
     res.status(200).json(data);
   } catch (err) {
     console.error("Error fetching TopsHeadingShorts:", err);

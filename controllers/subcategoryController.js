@@ -1,9 +1,11 @@
 const Subcategory = require("../models/subcategory");
+const slugify = require("slugify");
 
 // CREATE
 exports.createSubcategory = async (req, res) => {
   try {
-    const subcategory = new Subcategory(req.body);
+    const subcategory = new Subcategory( {...req.body,
+          slug: slugify(req.body.name).toLowerCase()});
     const saved = await subcategory.save();
     res.status(201).json(saved);
   } catch (err) {
@@ -57,19 +59,38 @@ exports.getSubcategoryById = async (req, res) => {
 };
 
 // UPDATE
+
+
+
 exports.updateSubcategory = async (req, res) => {
   try {
+    const { name, ...rest } = req.body;
+
     const updated = await Subcategory.findByIdAndUpdate(
       req.params.id,
-      { $set: req.body },
-      { new: true, runValidators: true }
+      {
+        $set: {
+          ...rest,
+          name,
+          slug: slugify(name).toLowerCase(),
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
     ).populate("category", "name");
-    if (!updated) return res.status(404).json({ error: "Subcategory not found" });
+
+    if (!updated) {
+      return res.status(404).json({ error: "Subcategory not found" });
+    }
+
     res.json(updated);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
+
 
 
 exports.updateStatus = async (req, res) => {

@@ -18,6 +18,13 @@ const subcategorySchema = new mongoose.Schema(
       required: true,
     },
 
+
+    slug: {
+      type: String,
+      unique: true,
+      index: true,
+    },
+
     status:{
       type:String,
       default:"Inactive"

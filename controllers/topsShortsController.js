@@ -11,25 +11,26 @@ exports.createTopsShorts = async (req, res) => {
 };
 
 exports.getAllTopsShorts = async (req, res) => {
-    try {
-      const topsShorts = await TopsShorts.find()
-        .populate({
-          path: "compBlog",
-          populate: [
-            { path: "categories", model: "Category" },
-            // { path: "subcategories", model: "Subcategory" },
-            { path: "company", model: "Company", select: "logo" },
-            // { path: "tags", model: "Tag" },
-            // { path: "postedBy", model: "User" },
-          ],
-        })
-        .sort({ createdAt: -1 });
-  
-      res.json(topsShorts);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-  };
+  try {
+    const topsShorts = await TopsShorts.find()
+      .populate({
+        path: "compBlog",
+        populate: [
+          { path: "categories", model: "Category" },
+          { path: "subcategories", model: "Subcategory" }, // ✅ Add this line
+          { path: "company", model: "Company", select: "logo" },
+          // { path: "tags", model: "Tag" },
+          // { path: "postedBy", model: "User" },
+        ],
+      })
+      .sort({ createdAt: -1 });
+
+    res.json(topsShorts);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
   
 
 exports.getTopsShortsById = async (req, res) => {
