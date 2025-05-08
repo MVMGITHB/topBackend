@@ -23,6 +23,8 @@ const tag = require("./routes/tag")
 const company = require("./routes/companyRoutes")
 const compBlog = require("./routes/compBlogRoutes")
 const topsShortsRoutes = require("./routes/topsShortsRoutes");
+const trendingRoutes = require("./routes/trendingRoute")
+const topHeadingRoutes = require("./routes/topsHeadingShortsRoute")
 
 
 
@@ -74,6 +76,8 @@ app.use(tag)
 app.use(company)
 app.use(compBlog)
 app.use("/api/tops-shorts", topsShortsRoutes);
+app.use("/api/trending-shorts", trendingRoutes);
+app.use("/api/topHeading-shorts", topHeadingRoutes);
 
 
 
