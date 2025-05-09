@@ -53,6 +53,27 @@ const CompBlogSchema = new mongoose.Schema(
       type:String,
      },
 
+
+     faqs: [
+      {
+        ques: {
+          type: String,
+          required: true
+        },
+        ans: {
+          type: String,
+          required: true
+        }
+      }
+    ],
+
+
+    body: {
+      type: String,
+      required: true,
+      
+    },
+
     status:{
       type:String,
       default:"Inactive"
