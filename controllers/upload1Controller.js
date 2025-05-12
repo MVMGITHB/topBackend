@@ -18,7 +18,7 @@ const upload = multer({ storage });
 
 // Upload media function
 const uploadMedia = (req, res) => {
-  upload.single('file')(req, res, (err) => {
+  upload.single('file[0]')(req, res, (err) => {
     if (err) {
       return res.status(400).json({ message: err.message });
     }
