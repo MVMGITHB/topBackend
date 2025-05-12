@@ -25,6 +25,7 @@ const compBlog = require("./routes/compBlogRoutes")
 const topsShortsRoutes = require("./routes/topsShortsRoutes");
 const trendingRoutes = require("./routes/trendingRoute")
 const topHeadingRoutes = require("./routes/topsHeadingShortsRoute")
+const uploadRoutes = require('./routes/uploadRoutes'); 
 
 
 
@@ -64,6 +65,9 @@ app.use(
     credentials: true, // Allows cookies and session headers
   })
 );
+
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(cors());
 
 app.use(express.json());
@@ -78,6 +82,7 @@ app.use(compBlog)
 app.use("/api/tops-shorts", topsShortsRoutes);
 app.use("/api/trending-shorts", trendingRoutes);
 app.use("/api/topHeading-shorts", topHeadingRoutes);
+app.use('/api', uploadRoutes);
 
 
 
