@@ -17,14 +17,14 @@ exports.createSubcategory = async (req, res) => {
 exports.getAllSubcategories = async (req, res) => {
   try {
     const subcategories = await Subcategory.find()
-      .populate("category", "name") // populate only category name
+      .populate("category", "name") // Populate only the category name
       .exec();
 
-    // Sort by populated category name
+    // Sort safely by checking if category and category.name exist
     const sortedSubcategories = subcategories.sort((a, b) => {
-      if (a.category.name < b.category.name) return -1;
-      if (a.category.name > b.category.name) return 1;
-      return 0;
+      const nameA = a.category?.name || '';
+      const nameB = b.category?.name || '';
+      return nameA.localeCompare(nameB);
     });
 
     res.json(sortedSubcategories);
@@ -32,6 +32,7 @@ exports.getAllSubcategories = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 
 
