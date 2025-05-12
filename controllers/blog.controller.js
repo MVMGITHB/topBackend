@@ -27,7 +27,7 @@ exports.getAllBlogs = async (req, res) => {
       .populate("categories", "name slug")
       .populate("tags", "name slug")
       .populate("subcategories", "name")
-      .populate("postedBy", "username email") // Only get username and email
+      .populate("postedBy", "username email slug") // Only get username and email
       .sort({ createdAt: -1 });
     res.json(blogs);
   } catch (error) {
@@ -55,7 +55,7 @@ exports.getBlogBySlug = async (req, res) => {
       .populate("categories", "name slug")
       .populate("tags", "name slug")
       .populate("subcategories", "name")
-      .populate("postedBy", "username email");
+      .populate("postedBy", "username email slug");
 
     if (!blog) return res.status(404).json({ error: "Blog not found" });
 
