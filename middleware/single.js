@@ -20,16 +20,16 @@ const storage = multer.diskStorage({
   }
 });
 
-// File filter to allow all types
+// Updated file filter to include videos
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|gif|webp|pdf|doc|docx/;
+  const allowedTypes = /jpeg|jpg|png|gif|webp|pdf|doc|docx|mp4|mov|avi|mkv|webm|flv|wmv/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = allowedTypes.test(file.mimetype);
+  const mimetype = allowedTypes.test(file.mimetype.toLowerCase());
 
   if (extname && mimetype) {
     cb(null, true);
   } else {
-    cb(new Error('Only images, PDF, and DOC files are allowed!'));
+    cb(new Error('Only images, video, PDF, and DOC files are allowed!'));
   }
 };
 
@@ -37,8 +37,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
+  limits: { fileSize: 200 * 1024 * 1024 }, // Increased to 200 MB for video
 });
 
-// Export using CommonJS
 module.exports = upload;

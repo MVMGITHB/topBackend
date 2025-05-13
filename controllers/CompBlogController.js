@@ -10,7 +10,7 @@ exports.createCompBlog = async (req, res) => {
 
     const compBlog = await CompBlog.create({
       title,
-      slug: slugify(title).toLowerCase(),
+      slug: slugify(slug).toLowerCase(),
       mtitle,
       mdesc,
       categories,
@@ -109,6 +109,8 @@ exports.getCompBlogBySlug = async (req, res) => {
       .populate("postedBy");
 
     if (!blog) return res.status(404).json({ error: "Blog not found" });
+
+    // console.log(blog)
     res.json(blog);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -120,7 +122,7 @@ exports.updateCompBlog = async (req, res) => {
   try {
     const updatedBlog = await CompBlog.findByIdAndUpdate(
       { _id: req.params.slug },
-      req.body,
+      {...req.body,slug: slugify(slug).toLowerCase()},
       { new: true }
     )
       .populate("categories")

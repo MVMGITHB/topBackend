@@ -63,6 +63,13 @@ const blogSchema = new mongoose.Schema(
     },
 
 
+     blogType:{
+            type:String,
+            enum:['viral stories','article'],
+            trim: true
+          },
+
+
     faqs: [
       {
         ques: {
