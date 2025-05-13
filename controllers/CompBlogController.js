@@ -6,7 +6,7 @@ const slugify = require("slugify");
 // CREATE
 exports.createCompBlog = async (req, res) => {
   try {
-    const { title, mtitle, mdesc, categories, subcategories, company, tags, postedBy,image,faqs,body } = req.body;
+    const { title, mtitle, mdesc, categories, subcategories, company, tags, postedBy,image,faqs,body,slug } = req.body;
 
     const compBlog = await CompBlog.create({
       title,
@@ -122,7 +122,7 @@ exports.updateCompBlog = async (req, res) => {
   try {
     const updatedBlog = await CompBlog.findByIdAndUpdate(
       { _id: req.params.slug },
-      {...req.body,slug: slugify(slug).toLowerCase()},
+      {...req.body,slug: slugify(req?.body?.slug).toLowerCase()},
       { new: true }
     )
       .populate("categories")
