@@ -39,7 +39,7 @@ exports.getAllBlogs = async (req, res) => {
 
 exports.getAllBlogsArticle = async (req, res) => {
   try {
-    const blogs = await Blog.find({ blogtype: 'article' })
+    const blogs = await Blog.find({ blogType: 'article' })
       .populate("categories", "name slug")
       .populate("tags", "name slug")
       .populate("subcategories", "name")
@@ -56,7 +56,7 @@ exports.getAllBlogsArticle = async (req, res) => {
 
 exports.getAllViralStories = async (req, res) => {
   try {
-    const blogs = await Blog.find({ blogtype: 'viral stories' })
+    const blogs = await Blog.find({ blogType: 'viral stories' })
       .populate("categories", "name slug")
       .populate("tags", "name slug")
       .populate("subcategories", "name")
