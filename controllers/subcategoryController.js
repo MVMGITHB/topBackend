@@ -1,4 +1,5 @@
 const Subcategory = require("../models/subcategory");
+const Category = require("../models/category");
 const slugify = require("slugify");
 
 // CREATE
@@ -33,6 +34,30 @@ exports.getAllSubcategories = async (req, res) => {
   }
 };
 
+
+exports.getSubcategorybyCategoryslug=async(req,res)=>{
+
+  try {
+
+    const { slug } = req.params;
+    const category = await Category.findOne({ slug: slug });
+
+    if (!category) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    const subcategory = await Subcategory.find({category:category?._id})
+
+    res.status(201).json(subcategory)
+
+        
+    
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: err.message });
+  }
+
+}
 
 
 
@@ -91,6 +116,9 @@ exports.updateSubcategory = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+
+
 
 
 

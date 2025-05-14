@@ -2,6 +2,8 @@
 const CompBlog = require("../models/CompBlog");
 const Category = require("../models/category")
 const slugify = require("slugify");
+const Subcategory = require("../models/subcategory");
+const Blog = require("../models/blog");
 
 // CREATE
 exports.createCompBlog = async (req, res) => {
@@ -30,6 +32,87 @@ exports.createCompBlog = async (req, res) => {
 };
 
 
+exports.filterbysubcateory=async(req,res)=>{
+    try {
+
+       const { slug } = req.params;
+
+
+    const Subcategorys = await Subcategory.findOne({ slug: slug });
+
+    if (!Subcategorys) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+
+     const compblogs = await CompBlog.find({subcategories:Subcategorys?._id})
+    .populate("subcategories")
+
+     const blogs = await Blog.find({subcategories:Subcategorys?._id})
+    .populate("subcategories")
+
+    const blogsdata = [...compblogs,blogs]
+
+    res.status(200).json(blogsdata)
+
+
+      
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    console.log(error)
+    }
+}
+
+
+// exports.filterBLog = async(req,res)=>{
+//   try {
+//     const { slug } = req.params;
+
+
+//     const category = await Category.findOne({ slug: slug });
+
+//     if (!category) {
+//       return res.status(404).json({ error: "Category not found" });
+//     }
+    
+//     console.log(category._id)
+
+
+//     const blogs = await CompBlog.find({categories:category?._id})
+//     .populate("subcategories")
+
+//     console.log(blogs)
+  
+  
+//     const result = [];
+
+//     blogs.forEach(item => {
+//       const subcatId = item?.subcategories?._id;
+//       const existing = result?.find(r => r?.subcategories?._id?.toString() === subcatId?.toString());
+    
+//       if (existing) {
+//         existing.items.push(item);
+//       } else {
+//         const data = {
+//           subcategories: item?.subcategories,
+//           items: [item]
+//         };
+//         result.push(data);
+//       }
+//     });
+    
+
+
+//   // return result;
+    
+//     res.status(200).json(result);
+//   } catch (error) {
+//     res.status(400).json({ error: error.message });
+//     console.log(error)
+//   }
+// }
+
+
 exports.filterBLog = async(req,res)=>{
   try {
     const { slug } = req.params;
@@ -44,28 +127,39 @@ exports.filterBLog = async(req,res)=>{
     console.log(category._id)
 
 
-    const blogs = await CompBlog.find({categories:category?._id})
-    .populate("subcategories")
+    const subcategory = await Subcategory.find({category:category?._id})
 
-    console.log(blogs)
-  
-  
-    const result = [];
+const result = await Promise.all(
+      subcategory.map(async (subcat) => {
+        const compBlogs = await CompBlog.find({ subcategories: subcat._id })
+          .populate("categories", "name slug")
+          .populate("tags", "name slug")
+          .populate("subcategories", "name")
+          .populate("postedBy", "username email slug")
+          .sort({ createdAt: -1 });
 
-    blogs.forEach(item => {
-      const subcatId = item?.subcategories?._id;
-      const existing = result?.find(r => r?.subcategories?._id?.toString() === subcatId?.toString());
-    
-      if (existing) {
-        existing.items.push(item);
-      } else {
-        const data = {
-          subcategories: item?.subcategories,
-          items: [item]
+        const blogs = await Blog.find({ subcategories: subcat._id })
+          // Add condition here if you want to filter blogType (e.g., blogType: 'article')
+          .populate("categories", "name slug")
+          .populate("tags", "name slug")
+          .populate("subcategories", "name")
+          .populate("postedBy", "username email slug")
+          .sort({ createdAt: -1 });
+
+        return {
+          subcategory: subcat,
+          compBlogs,
+          blogs
         };
-        result.push(data);
-      }
-    });
+      })
+    );
+
+
+
+
+
+
+    res.json(result);
     
 
 
