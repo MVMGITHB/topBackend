@@ -74,6 +74,16 @@ const CompBlogSchema = new mongoose.Schema(
       
     },
 
+    heading:{
+      type:String,
+    },
+    subHeading:{
+      type:String,
+    },
+    para:{
+      type:String,
+    },
+
     status:{
       type:String,
       default:"Inactive"

@@ -5,10 +5,20 @@ const slugify = require("slugify");
 const Subcategory = require("../models/subcategory");
 const Blog = require("../models/blog");
 
+
+// heading:{
+//       type:String,
+//     },
+//     subHeading:{
+//       type:String,
+//     },
+//     para:{
+//       type:String,
+//     },
 // CREATE
 exports.createCompBlog = async (req, res) => {
   try {
-    const { title, mtitle, mdesc, categories, subcategories, company, tags, postedBy,image,faqs,body,slug } = req.body;
+    const { title, mtitle, mdesc, categories, subcategories, company, tags, postedBy,image,faqs,body,slug ,heading,subHeading,para} = req.body;
 
     const compBlog = await CompBlog.create({
       title,
@@ -22,7 +32,8 @@ exports.createCompBlog = async (req, res) => {
       postedBy,
       image,
       faqs,
-      body
+      body,
+      heading,subHeading,para
     });
 
     res.status(201).json(compBlog);
