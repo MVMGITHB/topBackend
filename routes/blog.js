@@ -8,13 +8,17 @@ const {
   updateBlog,
   deleteBlog,
   updateBlogById,
-  updateStatus
+  updateStatus,
+  getAllBlogsArticle,
+  getAllViralStories
 } = require("../controllers/blog.controller");
 
 // POST ROUTE TO CREATE BLOG    
 router.post("/blogs", createBlog);
 
 router.get("/blogs", getAllBlogs);
+router.get("/getAllArticle", getAllBlogsArticle);
+router.get("/getAllViralStories", getAllViralStories);
 
 router.get("/blogs/:slug", getBlogBySlug);
 

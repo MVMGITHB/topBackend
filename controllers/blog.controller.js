@@ -35,6 +35,41 @@ exports.getAllBlogs = async (req, res) => {
   }
 };
 
+
+
+exports.getAllBlogsArticle = async (req, res) => {
+  try {
+    const blogs = await Blog.find({ blogtype: 'article' })
+      .populate("categories", "name slug")
+      .populate("tags", "name slug")
+      .populate("subcategories", "name")
+      .populate("postedBy", "username email slug")
+      .sort({ createdAt: -1 });
+
+    res.json(blogs);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+exports.getAllViralStories = async (req, res) => {
+  try {
+    const blogs = await Blog.find({ blogtype: 'viral stories' })
+      .populate("categories", "name slug")
+      .populate("tags", "name slug")
+      .populate("subcategories", "name")
+      .populate("postedBy", "username email slug")
+      .sort({ createdAt: -1 });
+
+    res.json(blogs);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 exports.getblogbyCategory =  async (req, res) => {
   const { categoryId } = req.params;
 
