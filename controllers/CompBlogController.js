@@ -5,6 +5,8 @@ const slugify = require("slugify");
 const Subcategory = require("../models/subcategory");
 const Blog = require("../models/blog");
 
+const Company = require("../models/companyModel");
+
 
 // heading:{
 //       type:String,
@@ -221,6 +223,284 @@ exports.getCompBlogBySlug = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
+
+// exports.commonSearch = async (req, res) => {
+//   try {
+//     const { q } = req.query;
+
+//     if (!q || q.trim() === "") {
+//       return res.status(400).json({ error: "Search query (q) is required." });
+//     }
+
+//     const escapedQuery = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escape special regex chars
+//     const regex = new RegExp(escapedQuery, "i");
+
+//     const companies = await Company.find({
+//       $or: [
+//         { websiteName: regex },
+//         { review: regex },
+//         { features: regex },
+//         { mainHeading: regex },
+//         { Description: regex },
+//         { pros: regex },
+//         { cons: regex },
+//       ],
+//     });
+
+//     const blogs = await Blog.find({
+//       $or: [
+//         { title: regex },
+//         { body: regex },
+//         { excerpt: regex },
+//         { mtitle: regex },
+//         { mdesc: regex },
+//       ],
+//     }).populate("categories subcategories tags postedBy");
+
+//     const compBlogs = await CompBlog.find({
+//       $or: [
+//         { title: regex },
+//         { body: regex },
+//         { mtitle: regex },
+//         { mdesc: regex },
+//         { heading: regex },
+//         { subHeading: regex },
+//         { para: regex },
+//       ],
+//     }).populate("categories subcategories tags postedBy company");
+
+//     res.json({ companies, blogs, compBlogs });
+//   } catch (error) {
+//     console.error("Search failed:", error);
+//     res.status(500).json({ error: "Search failed" });
+//   }
+// };
+
+
+
+
+// exports.commonSearch = async (req, res) => {
+//   try {
+//     const { q } = req.query;
+
+//     if (!q || q.trim() === "") {
+//       return res.status(400).json({ error: "Search query (q) is required." });
+//     }
+
+//     const escapedQuery = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+//     const regex = new RegExp(escapedQuery, "i");
+
+//     // 1. Companies (direct search)
+//     const companies = await Company.find({
+//       $or: [
+//         { websiteName: regex },
+//         { review: regex },
+//         { features: regex },
+//         { mainHeading: regex },
+//         { Description: regex },
+//         { pros: regex },
+//         { cons: regex },
+//       ],
+//     });
+
+//     // 2. Blogs (including populated fields)
+//     const blogsRaw = await Blog.find({
+//       $or: [
+//         { title: regex },
+//         { body: regex },
+//         { excerpt: regex },
+//         { mtitle: regex },
+//         { mdesc: regex },
+//       ],
+//     })
+//       .populate("categories")
+//       .populate("subcategories")
+//       .populate("tags")
+//       .populate("postedBy");
+
+//     const blogs = blogsRaw.filter(blog =>
+//       regex.test(blog?.categories?.name || "") ||
+//       regex.test(blog?.subcategories?.name || "") ||
+//       regex.test(blog?.tags?.name || "") ||
+//       regex.test(blog?.postedBy?.name || "") ||
+//       regex.test(blog.title) ||
+//       regex.test(blog.body) ||
+//       regex.test(blog.excerpt) ||
+//       regex.test(blog.mtitle) ||
+//       regex.test(blog.mdesc)
+//     );
+
+//     // 3. CompBlogs (including populated fields)
+//     const compBlogsRaw = await CompBlog.find({
+//       $or: [
+//         { title: regex },
+//         { body: regex },
+//         { mtitle: regex },
+//         { mdesc: regex },
+//         { heading: regex },
+//         { subHeading: regex },
+//         { para: regex },
+//       ],
+//     })
+//       .populate("categories")
+//       .populate("subcategories")
+//       .populate("tags")
+//       .populate("postedBy")
+//       .populate("company");
+
+//   const compBlogs = compBlogsRaw.filter(comp =>
+//   regex.test(comp?.categories?.name || "") ||
+//   regex.test(comp?.subcategories?.name || "") ||
+//   regex.test(comp?.tags?.name || "") ||
+//   regex.test(comp?.postedBy?.name || "") ||
+//   regex.test(comp.title) ||
+//   regex.test(comp.body) ||
+//   regex.test(comp.mtitle) ||
+//   regex.test(comp.mdesc) ||
+//   regex.test(comp.heading) ||
+//   regex.test(comp.subHeading) ||
+//   regex.test(comp.para) ||
+//   comp.company?.some(c =>
+//     regex.test(c?.websiteName || "") ||
+//     regex.test(c?.review || "") ||
+//     (c?.features || []).some(f => regex.test(f)) ||
+//     regex.test(c?.mainHeading || "") ||
+//     regex.test(c?.Description || "") ||
+//     (c?.pros || []).some(p => regex.test(p)) ||
+//     (c?.cons || []).some(n => regex.test(n)) ||
+//     (c?.benifits || []).some(b => regex.test(b)) ||
+//     regex.test(c?.logo || "")
+//   )
+// );
+
+
+//     res.json({ companies, blogs, compBlogs });
+//   } catch (error) {
+//     console.error("Search failed:", error);
+//     res.status(500).json({ error: "Search failed" });
+//   }
+// };
+
+
+
+exports.commonSearch = async (req, res) => {
+  try {
+    const { q } = req.query;
+
+    if (!q || q.trim() === "") {
+      return res.status(400).json({ error: "Search query (q) is required." });
+    }
+
+    // Escape regex special characters in the query string
+    const escapedQuery = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(escapedQuery, "i");
+
+    // 1. Search Companies directly by fields
+    const companies = await Company.find({
+      $or: [
+        { websiteName: regex },
+        { review: regex },
+        { features: regex },
+        { mainHeading: regex },
+        { Description: regex },
+        { pros: regex },
+        { cons: regex },
+      ],
+    });
+
+    // 2. Search Blogs and filter based on populated fields & text fields
+    const blogsRaw = await Blog.find({
+      $or: [
+        { title: regex },
+        { body: regex },
+        { excerpt: regex },
+        { mtitle: regex },
+        { mdesc: regex },
+      ],
+    })
+      .populate("categories")
+      .populate("subcategories")
+      .populate("tags")
+      .populate("postedBy");
+
+    const blogs = blogsRaw.filter(blog =>
+      regex.test(blog?.categories?.name || "") ||
+      regex.test(blog?.subcategories?.name || "") ||
+      regex.test(blog?.tags?.name || "") ||
+      regex.test(blog?.postedBy?.name || "") ||
+      regex.test(blog.title) ||
+      regex.test(blog.body) ||
+      regex.test(blog.excerpt) ||
+      regex.test(blog.mtitle) ||
+      regex.test(blog.mdesc)
+    );
+
+    // 3. Search CompBlogs and filter based on its own fields and populated company fields
+    const compBlogsRaw = await CompBlog.find({
+      $or: [
+        { title: regex },
+        { body: regex },
+        { mtitle: regex },
+        { mdesc: regex },
+        { heading: regex },
+        { subHeading: regex },
+        { para: regex },
+      ],
+    })
+      .populate("categories")
+      .populate("subcategories")
+      .populate("tags")
+      .populate("postedBy")
+      .populate("company");
+
+    const compBlogs = compBlogsRaw.filter(comp => {
+      const companies = Array.isArray(comp.company) ? comp.company : [];
+
+      const matchesCompany = companies.some(c =>
+        regex.test(c?.websiteName || "") ||
+        regex.test(c?.review || "") ||
+        (c?.features || []).some(f => regex.test(f)) ||
+        regex.test(c?.mainHeading || "") ||
+        regex.test(c?.Description || "") ||
+        (c?.pros || []).some(p => regex.test(p)) ||
+        (c?.cons || []).some(n => regex.test(n)) ||
+        (c?.benifits || []).some(b => regex.test(b)) ||
+        regex.test(c?.logo || "")
+      );
+
+      const matchesCompBlog =
+        regex.test(comp?.categories?.name || "") ||
+        regex.test(comp?.subcategories?.name || "") ||
+        regex.test(comp?.tags?.name || "") ||
+        regex.test(comp?.postedBy?.name || "") ||
+        regex.test(comp.title) ||
+        regex.test(comp.body) ||
+        regex.test(comp.mtitle) ||
+        regex.test(comp.mdesc) ||
+        regex.test(comp.heading) ||
+        regex.test(comp.subHeading) ||
+        regex.test(comp.para);
+
+      return matchesCompany || matchesCompBlog;
+    });
+
+    // Return combined results
+    res.json({ companies, blogs, compBlogs });
+  } catch (error) {
+    console.error("Search failed:", error);
+    res.status(500).json({ error: "Search failed" });
+  }
+};
+
+
+
+
+
+
+
+
 
 // UPDATE
 exports.updateCompBlog = async (req, res) => {
