@@ -145,7 +145,7 @@ const result = await Promise.all(
         const compBlogs = await CompBlog.find({ subcategories: subcat._id })
           .populate("categories", "name slug")
           .populate("tags", "name slug")
-          .populate("subcategories", "name")
+          .populate("subcategories", "name slug")
           .populate("postedBy", "username email slug")
           .sort({ createdAt: -1 });
 
@@ -153,7 +153,7 @@ const result = await Promise.all(
           // Add condition here if you want to filter blogType (e.g., blogType: 'article')
           .populate("categories", "name slug")
           .populate("tags", "name slug")
-          .populate("subcategories", "name")
+          .populate("subcategories", "name slug")
           .populate("postedBy", "username email slug")
           .sort({ createdAt: -1 });
 
