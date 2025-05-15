@@ -70,7 +70,7 @@ const CompBlogSchema = new mongoose.Schema(
 
     body: {
       type: String,
-      required: true,
+      // required: true,
       
     },
 
