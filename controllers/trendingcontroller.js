@@ -3,11 +3,12 @@ const TrendingShorts = require("../models/trendingshortsmodel");
 // CREATE
 exports.addTrendingShort = async (req, res) => {
   try {
-    const { compBlog, page, status } = req.body;
+    const { compBlog, page, status,blog } = req.body;
 
     const newTrending = new TrendingShorts({
       compBlog,
       page,
+      blog,
       status,
     });
 
@@ -30,6 +31,14 @@ exports.getTrendingShorts = async (req, res) => {
           { path: "company", model: "Company", select: "logo" },
           // { path: "tags", model: "Tag" },
           // { path: "postedBy", model: "User" },
+        ],
+      }).populate({
+        path: "blog",
+        populate: [
+          { path: "categories", model: "Category" },
+          { path: "subcategories", model: "Subcategory" },
+          { path: "tags", model: "Tag" },
+          { path: "postedBy", model: "User", select: "name" },
         ],
       })
       .sort({ createdAt: -1 });;

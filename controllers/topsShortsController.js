@@ -22,6 +22,14 @@ exports.getAllTopsShorts = async (req, res) => {
           // { path: "tags", model: "Tag" },
           // { path: "postedBy", model: "User" },
         ],
+      }).populate({
+        path: "blog",
+        populate: [
+          { path: "categories", model: "Category" },
+          { path: "subcategories", model: "Subcategory" },
+          { path: "tags", model: "Tag" },
+          { path: "postedBy", model: "User", select: "name" },
+        ],
       })
       .sort({ createdAt: -1 });
 

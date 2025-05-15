@@ -7,9 +7,18 @@ const topsShortsSchema = new mongoose.Schema(
       {
         type: ObjectId,
         ref: "CompBlog",
-        required: true,
+        // required: true,
       },
     ],
+
+    blog: [
+      {
+        type: ObjectId,
+        ref: "Blog",
+        // required: true,
+      },
+    ],
+
 
     page: {
         type: String,

@@ -3,9 +3,9 @@ const TopsHeadingShorts = require("../models/topHeadingModel");
 // CREATE
 exports.addTopsHeadingShort = async (req, res) => {
   try {
-    const { compBlog, page, status } = req.body;
+    const { compBlog, page, status,blog } = req.body;
 
-    const newDoc = new TopsHeadingShorts({ compBlog, page, status });
+    const newDoc = new TopsHeadingShorts({ compBlog, page, status ,blog});
     const saved = await newDoc.save();
 
     res.status(201).json(saved);
@@ -18,23 +18,33 @@ exports.addTopsHeadingShort = async (req, res) => {
 // READ ALL
 exports.getTopsHeadingShorts = async (req, res) => {
   try {
-    const data = await TopsHeadingShorts.find() .populate({
+    const data = await TopsHeadingShorts.find()
+      .populate({
         path: "compBlog",
         populate: [
           { path: "categories", model: "Category" },
-          { path: "subcategories", model: "Subcategory" }, // ✅ Add this line
+          { path: "subcategories", model: "Subcategory" },
           { path: "company", model: "Company", select: "logo" },
-          // { path: "tags", model: "Tag" },
-          // { path: "postedBy", model: "User" },
         ],
       })
-      .sort({ createdAt: -1 });;
+      .populate({
+        path: "blog",
+        populate: [
+          { path: "categories", model: "Category" },
+          { path: "subcategories", model: "Subcategory" },
+          { path: "tags", model: "Tag" },
+          { path: "postedBy", model: "User", select: "name" },
+        ],
+      })
+      .sort({ createdAt: -1 });
+
     res.status(200).json(data);
   } catch (err) {
     console.error("Error fetching TopsHeadingShorts:", err);
     res.status(500).json({ error: "Failed to fetch TopsHeadingShorts." });
   }
 };
+
 
 // READ ONE
 exports.getTopsHeadingShortById = async (req, res) => {
