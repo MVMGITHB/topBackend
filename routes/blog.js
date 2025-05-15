@@ -10,7 +10,8 @@ const {
   updateBlogById,
   updateStatus,
   getAllBlogsArticle,
-  getAllViralStories
+  getAllViralStories,
+  similarBLog
 } = require("../controllers/blog.controller");
 
 // POST ROUTE TO CREATE BLOG    
@@ -21,6 +22,7 @@ router.get("/getAllArticle", getAllBlogsArticle);
 router.get("/getAllViralStories", getAllViralStories);
 
 router.get("/blogs/:slug", getBlogBySlug);
+router.get("/similarBlog/:slug", similarBLog);
 
 // GET blogs by category
 router.get("/blogs/category/:categoryId",  getblogbyCategory);

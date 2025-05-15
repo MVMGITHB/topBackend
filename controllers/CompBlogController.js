@@ -126,11 +126,32 @@ exports.filterBLog = async(req,res)=>{
 }
 
 
+exports.similarCompBLog = async(req,res)=>{
+      try {
+
+
+    const { slug } = req.params;
+    const category = await Category.findOne({ slug: slug });
+    if (!category) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+
+    const compBLog = await CompBlog.find({categories:category._id})
+    .populate("categories", "name slug")
+    .populate("subcategories", "name slug")
+
+    res.status(200).json(compBLog)
+        
+      } catch (error) {
+         res.status(400).json({ error: error.message });
+        console.log(error)
+      }
+}
+
 exports.filterBLog1 = async(req,res)=>{
   try {
     const { slug } = req.params;
-
-
     const category = await Category.findOne({ slug: slug });
 
     if (!category) {
