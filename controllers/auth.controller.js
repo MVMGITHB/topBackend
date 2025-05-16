@@ -15,6 +15,8 @@ const registerUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
+    
+    
 
     const newUser = new User({
       email,
@@ -28,7 +30,7 @@ const registerUser = async (req, res) => {
       tag,
       socialMedia,
       blog,
-      slug: slugify(req.body.slug).toLowerCase(),
+      slug: slug?slugify(req.body.slug).toLowerCase():"",
     });
 
     await newUser.save();
