@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema(
 
     slug: {
       type: String,
-      unique: true,
+      // unique: true,
       index: true,
     },
 
@@ -62,7 +62,7 @@ const userSchema = new mongoose.Schema(
       profile: { type: String }
   },
 
-   blog: [{ type: ObjectId, ref: "Blog", required: true }],
+   blog: [{ type: ObjectId, ref: "Blog" }],
 
     status:{
       type:String,
