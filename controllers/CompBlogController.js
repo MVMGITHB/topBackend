@@ -20,7 +20,7 @@ const Company = require("../models/companyModel");
 // CREATE
 exports.createCompBlog = async (req, res) => {
   try {
-    const { title, mtitle, mdesc, categories, subcategories, company, tags, postedBy,image,faqs,body,slug ,heading,subHeading,para} = req.body;
+    const { title, mtitle, mdesc, categories, subcategories, company, tags, postedBy,image,faqs,body,slug ,heading,subHeading,para,conclusion} = req.body;
 
     const compBlog = await CompBlog.create({
       title,
@@ -35,7 +35,8 @@ exports.createCompBlog = async (req, res) => {
       image,
       faqs,
       body,
-      heading,subHeading,para
+      heading,subHeading,para,
+      conclusion
     });
 
     res.status(201).json(compBlog);
@@ -514,12 +515,6 @@ exports.commonSearch = async (req, res) => {
     res.status(500).json({ error: "Search failed" });
   }
 };
-
-
-
-
-
-
 
 
 

@@ -53,6 +53,10 @@ const CompBlogSchema = new mongoose.Schema(
       type:String,
      },
 
+     conclusion:{
+             type :String,
+          },
+
 
      faqs: [
       {

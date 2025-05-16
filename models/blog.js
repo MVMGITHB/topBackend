@@ -68,7 +68,7 @@ const blogSchema = new mongoose.Schema(
             enum:['viral stories','article'],
             trim: true
           },
-          
+
 
 
      imageType:{
@@ -82,6 +82,10 @@ const blogSchema = new mongoose.Schema(
             type:String,
             enum:['blog','stories'],
             trim: true
+          },
+
+          conclusion:{
+             type :String,
           },
 
 
