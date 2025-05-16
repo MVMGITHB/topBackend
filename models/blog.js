@@ -68,6 +68,22 @@ const blogSchema = new mongoose.Schema(
             enum:['viral stories','article'],
             trim: true
           },
+          
+
+
+     imageType:{
+            type:String,
+            enum:['imageType','storiesType'],
+            trim: true
+          },
+
+
+     blogType1:{
+            type:String,
+            enum:['blog','stories'],
+            trim: true
+          },
+
 
 
     faqs: [
