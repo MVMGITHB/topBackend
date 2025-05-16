@@ -173,7 +173,10 @@ const result = await Promise.all(
           .populate("postedBy", "username email slug")
           .sort({ createdAt: -1 });
 
-        const blogs = await Blog.find({ subcategories: subcat._id })
+        const blogs = await Blog.find({
+  subcategories: subcat._id,
+  blogType: { $ne: "Viral Stories" }
+})
           // Add condition here if you want to filter blogType (e.g., blogType: 'article')
           .populate("categories", "name slug")
           .populate("tags", "name slug")
