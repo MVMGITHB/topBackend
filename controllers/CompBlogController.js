@@ -175,7 +175,7 @@ const result = await Promise.all(
 
         const blogs = await Blog.find({
   subcategories: subcat._id,
-  blogType: { $ne: "Viral Stories" }
+  blogType: { $ne: "viral stories" }
 })
           // Add condition here if you want to filter blogType (e.g., blogType: 'article')
           .populate("categories", "name slug")
