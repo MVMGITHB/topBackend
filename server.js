@@ -26,6 +26,8 @@ const topsShortsRoutes = require("./routes/topsShortsRoutes");
 const trendingRoutes = require("./routes/trendingRoute")
 const topHeadingRoutes = require("./routes/topsHeadingShortsRoute")
 const uploadRoutes = require('./routes/uploadRoutes'); 
+const dropDownRoutes = require("./routes/dropDownRoutes");
+const dropDownFormRoutes = require("./routes/dropDownFormRoutes");
 
 
 
@@ -82,6 +84,8 @@ app.use(compBlog)
 app.use("/api/tops-shorts", topsShortsRoutes);
 app.use("/api/trending-shorts", trendingRoutes);
 app.use("/api/topHeading-shorts", topHeadingRoutes);
+app.use("/api/dropDown", dropDownRoutes);
+app.use("/api/dropDownForm", dropDownFormRoutes);
 app.use('/api', uploadRoutes);
 
 
