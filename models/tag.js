@@ -16,10 +16,14 @@ const tagSchema = new mongoose.Schema(
       unique: true,
       index: true,
     },
+
+    
     category: {
       type: ObjectId,
       ref: "Category", // Make sure this matches your actual Category model name
     },
+
+
   },
   { timestamps: true }
 );

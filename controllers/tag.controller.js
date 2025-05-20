@@ -24,6 +24,19 @@ exports.getAllTags = async (req, res) => {
   }
 };
 
+
+exports.updateTag = async (req, res) => {
+  try {
+    const tag = await Tag.findByIdAndUpdate(req.params.id, {...req.body,slug :slugify(req?.body?.name).toLowerCase()}, {
+      new: true,
+    });
+    if (!tag) return res.status(404).json({ error: "Tag not found" });
+    res.json(tag);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
 // Get single tag by slug
 exports.getTag = async (req, res) => {
   try {
@@ -38,7 +51,7 @@ exports.getTag = async (req, res) => {
 // Delete tag
 exports.deleteTag = async (req, res) => {
   try {
-    const tag = await Tag.findOneAndDelete({ slug: req.params.slug });
+    const tag = await Tag.findByIdAndDelete({ _id: req.params.id });
     if (!tag) return res.status(404).json({ error: "Tag not found" });
     res.json({ message: "Tag deleted successfully" });
   } catch (err) {
