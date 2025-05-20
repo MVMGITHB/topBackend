@@ -17,12 +17,17 @@ const tagSchema = new mongoose.Schema(
       index: true,
     },
 
-    
+
     category: {
       type: ObjectId,
       ref: "Category", // Make sure this matches your actual Category model name
     },
 
+
+    status: {
+      type: String,
+      default: "Inactive",
+    },
 
   },
   { timestamps: true }
