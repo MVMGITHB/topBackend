@@ -48,6 +48,29 @@ exports.getTag = async (req, res) => {
   }
 };
 
+
+exports.updateStatus = async (req, res) => {
+  try {
+
+    let Blogs = await Tag.findById(req.params.id)
+   
+
+    if (!Blogs) return res.status(404).json({ error: "Blog not found" });
+
+    if(Blogs.status ==='Inactive')  {
+      Blogs.status ='Active'
+    }else{
+      Blogs.status ='Inactive'
+    }
+
+   const blogs =  await  Blogs.save()
+
+    res.json(blogs);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
 // Delete tag
 exports.deleteTag = async (req, res) => {
   try {
