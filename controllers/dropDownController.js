@@ -30,6 +30,25 @@ exports.getDropDownById = async (req, res) => {
   }
 };
 
+
+exports.getDropDownByCategoryId = async (req, res) => {
+  const { categoryId } = req.params;
+
+  try {
+    // Find one DropDown document with the matching category ID and status 'Active' (optional)
+    const dropDown = await DropDown.findOne({ category: categoryId}).populate('category');
+
+    if (!dropDown) {
+      return res.status(404).json({ message: "DropDown not found for this category" });
+    }
+
+    res.json(dropDown);
+  } catch (error) {
+    console.error("Error fetching DropDown:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 exports.updateDropDown = async (req, res) => {
   try {
     const dropDown = await DropDown.findByIdAndUpdate(req.params.id, req.body, {
