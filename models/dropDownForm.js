@@ -8,6 +8,14 @@ const dropDownFormSchema = new mongoose.Schema(
       ref: "Category",
       required: true,
     },
+
+    
+    subcategory: {
+      type: ObjectId,
+      ref: "Subcategory",
+      // required: true,
+    },
+
     field1: { type: String },
     field2: { type: String },
     field3: { type: String },

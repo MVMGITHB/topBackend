@@ -13,7 +13,7 @@ exports.createDropDown = async (req, res) => {
 
 exports.getAllDropDowns = async (req, res) => {
   try {
-    const dropDowns = await DropDown.find().populate("category");
+    const dropDowns = await DropDown.find().populate("category").populate("subcategory");
     res.json(dropDowns);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -22,7 +22,7 @@ exports.getAllDropDowns = async (req, res) => {
 
 exports.getDropDownById = async (req, res) => {
   try {
-    const dropDown = await DropDown.findById(req.params.id).populate("category");
+    const dropDown = await DropDown.findById(req.params.id).populate("category").populate("subcategory");
     if (!dropDown) return res.status(404).json({ error: "DropDown not found" });
     res.json(dropDown);
   } catch (err) {
@@ -36,7 +36,7 @@ exports.getDropDownByCategoryId = async (req, res) => {
 
   try {
     // Find one DropDown document with the matching category ID and status 'Active' (optional)
-    const dropDown = await DropDown.findOne({ category: categoryId}).populate('category');
+    const dropDown = await DropDown.findOne({ subcategory: categoryId}).populate('category').populate("subcategory");
 
     if (!dropDown) {
       return res.status(404).json({ message: "DropDown not found for this category" });

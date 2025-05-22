@@ -7,8 +7,17 @@ const dropDownSchema = new mongoose.Schema(
     category: {
       type: ObjectId,
       ref: "Category",
-      required: true,
+      // required: true,
     },
+   
+
+    subcategory: {
+      type: ObjectId,
+      ref: "Subcategory",
+      // required: true,
+    },
+    
+
     dropDown: [
       {
         Head: {
@@ -20,6 +29,8 @@ const dropDownSchema = new mongoose.Schema(
         },
       },
     ],
+
+
     status: {
       type: String,
       default: "Inactive",
